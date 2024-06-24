@@ -14,7 +14,7 @@ class Llama8bDeepspeedMultinodeFinetuning(FlowSpec):
     @step
     def train(self):
         import subprocess
-        # torchtune proc on train.py
+        # deepspeed proc on train.py
         # from best checkpoint
             # torch.compile
             # save full fp16 or bf16

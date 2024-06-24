@@ -1,0 +1,47 @@
+name: Smoke test models
+on:
+  push:
+
+jobs:
+  helloworld:
+    permissions:
+      id-token: write
+      contents: read
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.11
+
+      - name: Install and Configure Outerbounds
+        run: |-
+          pip install -U outerbounds && \
+          outerbounds service-principal-configure \
+          --name <YOUR-SERVICE-PRINCIPAL-NAME> \
+          --deployment-domain <YOUR-OUTERBOUNDS-DEPLOYMENT-NAME> \
+          --perimeter <YOUR-OUTERBOUNDS-PERIMETER-NAME> \
+          --github-actions
+
+      - name: Deploy new versions
+        run: |-
+            python llama-8b/fine-tuning/deepspeed/flow.py argo-workflows create && \
+            python llama-8b/fine-tuning/torchtune/flow.py argo-workflows create && \
+            python llama-8b/fine-tuning-lora/torchtune/flow.py argo-workflows create && \
+            python mistral-8b/fine-tuning/deepspeed/flow.py argo-workflows create && \
+            python mistral-8b/fine-tuning/torchtune/flow.py argo-workflows create && \
+            python mistral-8b/fine-tuning-lora/torchtune/flow.py argo-workflows create
+
+      - name: Run smoke tests
+        run: |-
+            python llama-8b/fine-tuning/deepspeed/flow.py argo-workflows trigger --smoke && \
+            python llama-8b/fine-tuning/torchtune/flow.py argo-workflows trigger --smoke && \
+            python llama-8b/fine-tuning-lora/torchtune/flow.py argo-workflows trigger --smoke \
+            python mistral-8b/fine-tuning/deepspeed/flow.py argo-workflows trigger --smoke && \
+            python mistral-8b/fine-tuning/torchtune/flow.py argo-workflows trigger --smoke && \
+            python mistral-8b/fine-tuning-lora/torchtune/flow.py argo-workflows trigger --smoke
+          
