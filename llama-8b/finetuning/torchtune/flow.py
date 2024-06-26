@@ -11,7 +11,7 @@ class TorchtuneMultinodeBase(FlowSpec):
     hf_repo_id = Parameter("repo-id", default="meta-llama/Meta-Llama-3-8B-Instruct")
 
     # torchtune comes with these:
-    dataset = Parameter("data", help="Which dataset to use", default="alpaca_dataset")
+    dataset = Parameter("data", help="Which dataset to use?", default="alpaca_dataset")
     # base types include: PackedDataset, ConcatDataset, TextCompletionDataset, ChatDataset, InstructionDataset, PreferenceDataset
     # example: alpaca_dataset is an InstructionDataset, slimorca_dataset is a ChatDataset.
 
