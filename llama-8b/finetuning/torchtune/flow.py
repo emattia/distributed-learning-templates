@@ -95,7 +95,7 @@ class TorchtuneMultinodeBase(FlowSpec):
             f"dataset=torchtune.datasets.{self.dataset}",
             f"tokenizer.path={self.local_checkpoint_in_path}/original/tokenizer.model",
             f"checkpointer.checkpoint_dir={self.local_checkpoint_in_path}/original",
-            f"checkpointer.output_dir={self.local_checkpoint_out_path}/new/",
+            f"checkpointer.output_dir={self.local_checkpoint_out_path}/new",
             "batch_size=2",
         ]
         success, stderr = self.exec(self.run_cmd)
