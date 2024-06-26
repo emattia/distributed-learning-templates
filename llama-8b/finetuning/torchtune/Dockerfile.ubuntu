@@ -1,0 +1,31 @@
+ARG CUDA_VERSION=12.4.1
+ARG UBUNTU_VERSION=20.04
+ARG PYTHON_VERSION=3.12
+
+FROM nvidia/cuda:$CUDA_VERSION-cudnn-runtime-ubuntu$UBUNTU_VERSION
+
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive  apt-get install -y \
+    build-essential \
+    git \
+    wget \
+    curl \
+    vim \
+    tmux \
+    ffmpeg \
+    sudo 
+
+RUN curl -sL https://micro.mamba.pm/api/micromamba/linux-64/1.1.0 \
+  | sudo tar -xvj -C /usr/local bin/micromamba
+ENV MAMBA_EXE=/usr/local/bin/micromamba \
+    MAMBA_ROOT_PREFIX=/home/user/micromamba \
+    CONDA_PREFIX=/home/user/micromamba \
+    PATH=/home/user/micromamba/bin:$PATH
+
+RUN micromamba create -y -n base && \
+    micromamba shell init --shell=bash --prefix="$MAMBA_ROOT_PREFIX"
+RUN micromamba install python=$PYTHON_VERSION pip -c conda-forge -y && python -m pip install --upgrade pip
+
+# BUG in torchtune pypi release? 
+RUN git clone https://github.com/pytorch/torchtune.git && \
+    cd torchtune && pip install . && cd .. && rm -rf torchtune
+RUN pip install huggingface_hub 

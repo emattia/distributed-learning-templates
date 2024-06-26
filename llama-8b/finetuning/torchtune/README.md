@@ -1,3 +1,18 @@
+## Setup
+
+### Ubuntu
+```bash
+bash ./local_setup_ubuntu.sh
+```
+
+### Download weights
+
+```bash
+tune download meta-llama/Meta-Llama-3-8B \
+    --output-dir /tmp/Meta-Llama-3-8B \
+    --hf-token $HF_TOKEN
+```
+
 ## Interactive
 
 ### Run the workflow from a dev notebook
